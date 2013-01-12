@@ -1,0 +1,11 @@
+####################################################################
+#        Project Template for STM32F4 Discovery                    #
+#                    Florian Zahn                                  #
+####################################################################
+
+
+needs installed STM32F4 Librarys (Standard Peripheral Library)
+needs summon-arm-toolchain
+PATHs in Makefile needs to be adjusted
+st-link needs to be installed to flash controller
+
