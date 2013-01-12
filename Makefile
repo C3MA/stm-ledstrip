@@ -1,17 +1,18 @@
 ##########################################################################
-#                    STM32F4 WS2811 Control                              #
+#                    STM32F4 Project Template Makefile                   #
+#   based on work of Jonathon Thomson http://jethomson.wordpress.com     #
+#                      modified by mail@florianzahn.de                   #
 ##########################################################################
 
-
 TARGET:=main
-TOOLCHAIN_PATH:=~/Development/sat/bin
+TOOLCHAIN_PATH:=~/sat/bin
 TOOLCHAIN_PREFIX:=arm-none-eabi
 OPTLVL:=3 # Optimization level, can be [0, 1, 2, 3, s].
 
 PROJECT_NAME:=$(notdir $(lastword $(CURDIR)))
 
 #TOP is Path to firmware-folder from STM
-TOP:=/Users/florianzahn/Development/stm32f4xx-fw
+TOP:=/home/tobi/dev/STM32F4-Discovery_FW_V1.1.0
 
 
 DISCOVERY:=$(TOP)/Utilities/STM32F4-Discovery

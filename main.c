@@ -8,54 +8,80 @@
 //#define HSE_VALUE    ((uint32_t)8000000) 
 
 
-u16 PWM_Buffer[520];
+u16 PWM_Buffer[] = {
+		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,
+		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
+		49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,
+		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
+		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,
+		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,
+		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,
+		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,
+		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
+		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
+		
+		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
+	};
 
 void Delay(__IO uint32_t nCount) {
   while(nCount--) {
   }
 }
 
-
-void DMA_Configuration(void)
+static void start_dma(void)
 {
-DMA_DeInit(DMA1_Stream2);
-DMA_InitTypeDef DMA_InitStructure ;
-DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&(TIM3->CCR4);
-DMA_InitStructure.DMA_Memory0BaseAddr = (u32)PWM_Buffer;
-DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
-DMA_InitStructure.DMA_BufferSize = 520;
-DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
-DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
-DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-DMA_Init(DMA1_Stream2, &DMA_InitStructure);
-// turning DMA on
-DMA_Cmd(DMA1_Stream2, ENABLE);
+	static DMA_InitTypeDef dma_init =
+	{
+			.DMA_BufferSize 		= 520,
+			.DMA_Channel 			= DMA_Channel_5,
+			.DMA_DIR 			= DMA_DIR_MemoryToPeripheral,
+			.DMA_FIFOMode 			= DMA_FIFOMode_Disable,
+			.DMA_FIFOThreshold 		= DMA_FIFOThreshold_HalfFull,
+			.DMA_Memory0BaseAddr 	= (uint32_t) PWM_Buffer,
+			.DMA_MemoryBurst 		= DMA_MemoryBurst_Single,
+			.DMA_MemoryDataSize 	= DMA_MemoryDataSize_HalfWord,
+			.DMA_MemoryInc 			= DMA_MemoryInc_Enable,
+			.DMA_Mode 				= DMA_Mode_Circular,
+			.DMA_PeripheralBaseAddr = (uint32_t) &TIM3->CCR4,
+			.DMA_PeripheralBurst 	= DMA_PeripheralBurst_Single,
+			.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord,
+			.DMA_PeripheralInc 		= DMA_PeripheralInc_Disable,
+			.DMA_Priority 			= DMA_Priority_Medium
+	};
 
+	DMA_Init(DMA1_Stream2, &dma_init);
+	DMA_Cmd(DMA1_Stream2, ENABLE);
+	TIM_DMACmd(TIM3, TIM_DMA_CC4, ENABLE);
 }
 
 
 int main(void)
-{
-	DMA_Configuration();
-	for (int i=0;i<520;i++) PWM_Buffer[i]=20;
-	//fill TEst_PWM
-	for(int i=0;i<480;i+=24) {
-		for(int j=i;j<i+8;j++) {
-			PWM_Buffer[j] = 49;
-		}
-	}	
-	
-	
-	
+{         	
+	SystemInit();
+
 	//InitStructures...
 	GPIO_InitTypeDef GPIO_InitStructure;
 	TIM_TimeBaseInitTypeDef TIM_TimeBase_InitStructure;
 	TIM_OCInitTypeDef TIM_OC_InitStructure;
-		
-	SystemInit();
 
 	//Clock für GPIO setzen
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
@@ -63,8 +89,6 @@ int main(void)
 	//Clock für TIM4 setzen
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	
-	//Clock für DMA-Controller
-	RCC_AHB1PeriphResetCmd(RCC_AHB1Periph_DMA1, ENABLE);
 	
 	//GPIO_PIN konfigurieren
 
@@ -91,43 +115,23 @@ int main(void)
 	TIM_OC_InitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
 	TIM_OC_InitStructure.TIM_OutputState = TIM_OutputState_Enable;
 	TIM_OC_InitStructure.TIM_OutputNState = TIM_OutputNState_Disable;
-	TIM_OC_InitStructure.TIM_Pulse = 49;
+	TIM_OC_InitStructure.TIM_Pulse = 0;
 	TIM_OC4Init(TIM3, &TIM_OC_InitStructure);
- 	TIM_DMACmd(TIM3, TIM_DMA_Update, ENABLE);
-	TIM_Cmd(TIM3, ENABLE);
+
 	TIM_CtrlPWMOutputs(TIM3, ENABLE);
+
+	TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);
+	TIM_ARRPreloadConfig(TIM3, ENABLE);
+
+	TIM_CCxCmd(TIM3, TIM_Channel_4, TIM_CCx_Enable);
+	TIM_Cmd(TIM3, ENABLE);
+
+	// DMA
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);
+	TIM_DMACmd(TIM3, TIM_DMA_CC4, ENABLE);
+	
+	start_dma();
 	
 	while (1) {};
 	
-	
-	/*
-
-	TIM_OC_InitStructure.TIM_Pulse = 0;
-	TIM_OC4Init(TIM3, &TIM_OC_InitStructure);
-	
-	
-	while (1) {
-	
-	TIM_OC_InitStructure.TIM_Pulse = 49;
-	TIM_OC4Init(TIM3, &TIM_OC_InitStructure);
-	Delay(12000000L);
-	
-	TIM_OC_InitStructure.TIM_Pulse = 0;
-	TIM_OC4Init(TIM3, &TIM_OC_InitStructure);
-	
-	Delay(12000000L);
-	
-	TIM_OC_InitStructure.TIM_Pulse = 20;
-	TIM_OC4Init(TIM3, &TIM_OC_InitStructure);
-	Delay(12000000L);
-	
-	TIM_OC_InitStructure.TIM_Pulse = 0;
-	TIM_OC4Init(TIM3, &TIM_OC_InitStructure);
-	
-	Delay(12000000L);
-	
-	
-	}
-*/
-
 }
