@@ -57,7 +57,8 @@ CDEFS+=-DUSE_STDPERIPH_DRIVER
 MCUFLAGS=-mcpu=cortex-m4 -mthumb -std=c99
 #MCUFLAGS=-mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpa -mfloat-abi=hard -mthumb-interwork
 #MCUFLAGS=-mcpu=cortex-m4 -mfpu=vfpv4-sp-d16 -mfloat-abi=hard
-COMMONFLAGS=-O$(OPTLVL) -g -Wall -Werror 
+#COMMONFLAGS=-O$(OPTLVL) -g -Wall -Werror
+COMMONFLAGS=-ggdb -Wall -Werror 
 CFLAGS=$(COMMONFLAGS) $(MCUFLAGS) $(INCLUDE) $(CDEFS)
 
 LDLIBS=

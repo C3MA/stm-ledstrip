@@ -7,65 +7,46 @@
 
 //#define HSE_VALUE    ((uint32_t)8000000) 
 
+#define PWM_BUFFER_SIZE 192
+#define FRAMEBUFFER_SIZE 4
 
-u16 PWM_Buffer[] = {
-		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,
-		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-		49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,
-		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,
-		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,
-		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,
-		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,
-		49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,49,49,49,49,49,49,49,49,20,20,20,20,20,20,20,20,
-		
-		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
-		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
-		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
-		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
-		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
-		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
-		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
-		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
-		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
-		00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,
-	};
+uint16_t PWM_Buffer[PWM_BUFFER_SIZE];
 
-void Delay(__IO uint32_t nCount) {
-  while(nCount--) {
-  }
-}
+uint32_t framebuffer[] =
+{
+	0x00ff0000, 0x00ff0000, 0x00ff0000, 0x00ff0000,
+	0x0000ff00, 0x0000ff00, 0x0000ff00, 0x0000ff00,	
+	0x000000ff, 0x000000ff, 0x000000ff, 0x000000ff,
+	0x00ff0000, 0x00ff0000, 0x00ff0000, 0x00ff0000,
+	0x0000ff00, 0x0000ff00, 0x0000ff00, 0x0000ff00,	
+	0x000000ff, 0x000000ff, 0x000000ff, 0x000000ff
+};
+
+uint32_t frame_pos = 0;
+int incomplete_return = 0; 
+
+
+void Update_Buffer(uint16_t* buffer);
 
 static void start_dma(void)
 {
 	static DMA_InitTypeDef dma_init =
 	{
-			.DMA_BufferSize 		= 520,
-			.DMA_Channel 			= DMA_Channel_5,
-			.DMA_DIR 			= DMA_DIR_MemoryToPeripheral,
-			.DMA_FIFOMode 			= DMA_FIFOMode_Disable,
-			.DMA_FIFOThreshold 		= DMA_FIFOThreshold_HalfFull,
+			.DMA_BufferSize 	= PWM_BUFFER_SIZE,
+			.DMA_Channel 		= DMA_Channel_5,
+			.DMA_DIR 		= DMA_DIR_MemoryToPeripheral,
+			.DMA_FIFOMode 		= DMA_FIFOMode_Disable,
+			.DMA_FIFOThreshold 	= DMA_FIFOThreshold_HalfFull,
 			.DMA_Memory0BaseAddr 	= (uint32_t) PWM_Buffer,
-			.DMA_MemoryBurst 		= DMA_MemoryBurst_Single,
+			.DMA_MemoryBurst 	= DMA_MemoryBurst_Single,
 			.DMA_MemoryDataSize 	= DMA_MemoryDataSize_HalfWord,
-			.DMA_MemoryInc 			= DMA_MemoryInc_Enable,
-			.DMA_Mode 				= DMA_Mode_Circular,
+			.DMA_MemoryInc 		= DMA_MemoryInc_Enable,
+			.DMA_Mode 			= DMA_Mode_Circular,
 			.DMA_PeripheralBaseAddr = (uint32_t) &TIM3->CCR4,
 			.DMA_PeripheralBurst 	= DMA_PeripheralBurst_Single,
 			.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord,
-			.DMA_PeripheralInc 		= DMA_PeripheralInc_Disable,
-			.DMA_Priority 			= DMA_Priority_Medium
+			.DMA_PeripheralInc 	= DMA_PeripheralInc_Disable,
+			.DMA_Priority 		= DMA_Priority_Medium
 	};
 
 	DMA_Init(DMA1_Stream2, &dma_init);
@@ -75,13 +56,20 @@ static void start_dma(void)
 
 
 int main(void)
-{         	
+{  
+	       	
 	SystemInit();
+
+	for(int i = 0; i < PWM_BUFFER_SIZE; i++)
+	{
+		PWM_Buffer[i] = 0x000000;
+	}
 
 	//InitStructures...
 	GPIO_InitTypeDef GPIO_InitStructure;
 	TIM_TimeBaseInitTypeDef TIM_TimeBase_InitStructure;
 	TIM_OCInitTypeDef TIM_OC_InitStructure;
+	NVIC_InitTypeDef nvic_init;
 
 	//Clock für GPIO setzen
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
@@ -89,7 +77,8 @@ int main(void)
 	//Clock für TIM4 setzen
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	
-	
+	Update_Buffer(PWM_Buffer);
+
 	//GPIO_PIN konfigurieren
 
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
@@ -97,10 +86,9 @@ int main(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
-	
+
 	//GPIO Alternate function verbinden
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource9, GPIO_AF_TIM3);
-	
 	
 	TIM_TimeBase_InitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBase_InitStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -129,9 +117,95 @@ int main(void)
 	// DMA
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);
 	TIM_DMACmd(TIM3, TIM_DMA_CC4, ENABLE);
-	
+	//DMA_ITConfig(DMA1_Stream2, DMA_IT_HT, ENABLE);
+	//DMA_ITConfig(DMA1_Stream2, DMA_IT_TC, ENABLE);
 	start_dma();
+
+	// NVIC for DMA
+	nvic_init.NVIC_IRQChannel = DMA1_Stream2_IRQn;
+	nvic_init.NVIC_IRQChannelPreemptionPriority = 4;
+	nvic_init.NVIC_IRQChannelSubPriority = 0;
+	nvic_init.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&nvic_init);	
+
+	
 	
 	while (1) {};
 	
+}
+
+
+// writes the pwm values of one byte into the array which will be used by the dma
+static inline void color2pwm(uint16_t ** const dest, const uint8_t color) {
+	uint8_t mask = 0x80;
+
+	do {
+		if (color & mask) {
+			**dest = 49;
+		} else {
+			**dest = 20;
+		}
+		*dest += 1;
+		mask >>= 1;
+	} while (mask != 0);
+}
+
+void Update_Buffer(uint16_t* buffer)
+{
+	uint32_t i, j, tmp;
+	uint16_t * bufp;
+
+	for (i = 0; i < (PWM_BUFFER_SIZE/2) / 24; i++) {
+		if (incomplete_return)
+		{
+			incomplete_return = 0;
+			for(j = 0; j < 24; j++)
+			{
+				buffer[i * 24 + j] = 0;
+			}
+			
+		}
+		else
+		{
+			if (frame_pos  == FRAMEBUFFER_SIZE)
+			{
+				incomplete_return = 1;
+				frame_pos = 0;
+				
+				for(j = 0; j < 24; j++)
+				{
+					buffer[i * 24 + j] = 0;
+				}
+			}
+			else
+			{
+				tmp = framebuffer[frame_pos++];
+				bufp =  buffer + (i * 24);
+
+				// edit here to change order of colors in "ws2812_framebuffer" (0x00RRGGBB, 0x00GGBBRR, etc)
+				// the chip needs G R B
+				color2pwm( &bufp, (tmp & 0x0000ff00) >> 8); // green
+				color2pwm( &bufp, (tmp & 0x00ff0000) >> 16); // red
+				color2pwm( &bufp, (tmp & 0x000000ff) >> 0); // blue
+			}
+		}
+	}
+}
+
+void DMA1_Stream2_IRQHandler(void)
+{
+	// Half-Transfer completed
+	if (DMA_GetITStatus(DMA1_Stream2, DMA_IT_HTIF2))
+	{
+		DMA_ClearITPendingBit(DMA1_Stream2, DMA_IT_HTIF2);
+		//Update_Buffer(PWM_Buffer);
+	}
+
+	// Transfer completed
+	if (DMA_GetITStatus(DMA1_Stream2, DMA_IT_TCIF2))
+	{
+		DMA_ClearITPendingBit(DMA1_Stream2, DMA_IT_TCIF2);
+		//Update_Buffer(PWM_Buffer + (PWM_BUFFER_SIZE / 2));
+	}
+
 }
