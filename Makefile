@@ -37,6 +37,7 @@ ASRC=startup_stm32f4xx.s
 
 # Project Source Files
 SRC=main.c
+SRC+=delay.c
 SRC+=system_stm32f4xx.c
 
 

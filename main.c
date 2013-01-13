@@ -4,23 +4,14 @@
 #include <stm32f4xx_gpio.h>
 #include <stm32f4xx_tim.h>
 #include <stm32f4xx_dma.h>
-
-//#define HSE_VALUE    ((uint32_t)8000000) 
+#include "delay.h"
 
 #define PWM_BUFFER_SIZE 192
-#define FRAMEBUFFER_SIZE 24
+#define FRAMEBUFFER_SIZE 30
 
 uint16_t PWM_Buffer[PWM_BUFFER_SIZE];
 
-uint32_t framebuffer[] =
-{
-	0x00ff00ff, 0x00ff0000, 0x00ff0000, 0x00ff0000,
-	0x0000ff00, 0x0000ff00, 0x0000ff00, 0x0000ff00,	
-	0x000000ff, 0x000000ff, 0x000000ff, 0x000000ff,
-	0x00ff0000, 0x00ff0000, 0x00ff0000, 0x00ff0000,
-	0x0000ff00, 0x0000ff00, 0x0000ff00, 0x0000ff00,	
-	0x000000ff, 0x000000ff, 0x000000ff, 0x000000ff
-};
+uint32_t framebuffer[FRAMEBUFFER_SIZE];
 
 uint32_t frame_pos = 0;
 int incomplete_return = 0; 
@@ -59,10 +50,15 @@ int main(void)
 {  
 	       	
 	SystemInit();
+	init_systick();
 
 	for(int i = 0; i < PWM_BUFFER_SIZE; i++)
 	{
-		PWM_Buffer[i] = 0x000000;
+		PWM_Buffer[i] = 0;
+	}
+	for(int i = 0; i < FRAMEBUFFER_SIZE; i++)
+	{
+		framebuffer[i] = 0;
 	}
 
 	//InitStructures...
@@ -83,6 +79,7 @@ int main(void)
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 
 	//GPIO Alternate function verbinden
@@ -127,8 +124,19 @@ int main(void)
 	NVIC_Init(&nvic_init);	
 
 	
-	
-	while (1) {};
+	uint32_t pos = 0;
+	delay_ms(200);
+	while (1) {
+		pos %= FRAMEBUFFER_SIZE;
+		framebuffer[pos] 		= 0x00FF0000;
+		if(pos>0) framebuffer[pos-1] 	= 0x00400000;
+		if(pos>1)framebuffer[pos-2] 	= 0x00100000;
+		delay_ms(80);
+		framebuffer[pos] = 0;
+		if(pos>0) framebuffer[pos-1] = 0;
+		if(pos>1) framebuffer[pos-2] = 0;
+		pos++;
+	};
 	
 }
 
