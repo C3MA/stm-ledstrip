@@ -8,13 +8,13 @@
 //#define HSE_VALUE    ((uint32_t)8000000) 
 
 #define PWM_BUFFER_SIZE 192
-#define FRAMEBUFFER_SIZE 4
+#define FRAMEBUFFER_SIZE 24
 
 uint16_t PWM_Buffer[PWM_BUFFER_SIZE];
 
 uint32_t framebuffer[] =
 {
-	0x00ff0000, 0x00ff0000, 0x00ff0000, 0x00ff0000,
+	0x00ff00ff, 0x00ff0000, 0x00ff0000, 0x00ff0000,
 	0x0000ff00, 0x0000ff00, 0x0000ff00, 0x0000ff00,	
 	0x000000ff, 0x000000ff, 0x000000ff, 0x000000ff,
 	0x00ff0000, 0x00ff0000, 0x00ff0000, 0x00ff0000,
@@ -76,8 +76,6 @@ int main(void)
 	
 	//Clock für TIM4 setzen
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
-	
-	Update_Buffer(PWM_Buffer);
 
 	//GPIO_PIN konfigurieren
 
@@ -117,8 +115,8 @@ int main(void)
 	// DMA
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);
 	TIM_DMACmd(TIM3, TIM_DMA_CC4, ENABLE);
-	//DMA_ITConfig(DMA1_Stream2, DMA_IT_HT, ENABLE);
-	//DMA_ITConfig(DMA1_Stream2, DMA_IT_TC, ENABLE);
+	DMA_ITConfig(DMA1_Stream2, DMA_IT_HT, ENABLE);
+	DMA_ITConfig(DMA1_Stream2, DMA_IT_TC, ENABLE);
 	start_dma();
 
 	// NVIC for DMA
@@ -198,14 +196,14 @@ void DMA1_Stream2_IRQHandler(void)
 	if (DMA_GetITStatus(DMA1_Stream2, DMA_IT_HTIF2))
 	{
 		DMA_ClearITPendingBit(DMA1_Stream2, DMA_IT_HTIF2);
-		//Update_Buffer(PWM_Buffer);
+		Update_Buffer(PWM_Buffer);
 	}
 
 	// Transfer completed
 	if (DMA_GetITStatus(DMA1_Stream2, DMA_IT_TCIF2))
 	{
 		DMA_ClearITPendingBit(DMA1_Stream2, DMA_IT_TCIF2);
-		//Update_Buffer(PWM_Buffer + (PWM_BUFFER_SIZE / 2));
+		Update_Buffer(PWM_Buffer + (PWM_BUFFER_SIZE / 2));
 	}
 
 }
