@@ -7,7 +7,7 @@
 #include "delay.h"
 
 #define PWM_BUFFER_SIZE 192
-#define FRAMEBUFFER_SIZE 30
+#define FRAMEBUFFER_SIZE 240
 
 uint16_t PWM_Buffer[PWM_BUFFER_SIZE];
 
@@ -124,18 +124,38 @@ int main(void)
 	NVIC_Init(&nvic_init);	
 
 	
-	uint32_t pos = 0;
-	delay_ms(200);
+	uint32_t pos_r = 20;
+	uint32_t pos_g = 10;
+	uint32_t pos_b = 0;
+	delay_ms(20);
 	while (1) {
-		pos %= FRAMEBUFFER_SIZE;
-		framebuffer[pos] 		= 0x00FF0000;
-		if(pos>0) framebuffer[pos-1] 	= 0x00400000;
-		if(pos>1)framebuffer[pos-2] 	= 0x00100000;
-		delay_ms(80);
-		framebuffer[pos] = 0;
-		if(pos>0) framebuffer[pos-1] = 0;
-		if(pos>1) framebuffer[pos-2] = 0;
-		pos++;
+		pos_r %= FRAMEBUFFER_SIZE;
+		pos_g %= FRAMEBUFFER_SIZE;
+		pos_b %= FRAMEBUFFER_SIZE;
+		framebuffer[pos_r] 		= 0x00FF0000;
+		if(pos_r>0) framebuffer[pos_r-1] 	= 0x00400000;
+		if(pos_r>1)framebuffer[pos_r-2] 	= 0x00100000;
+		delay_ms(10);
+		framebuffer[pos_r] = 0;
+		if(pos_r>0) framebuffer[pos_r-1] = 0;
+		if(pos_r>1) framebuffer[pos_r-2] = 0;
+		pos_r++;
+		framebuffer[pos_g] 		= 0x0000FF00;
+		if(pos_g>0) framebuffer[pos_g-1] 	= 0x00004000;
+		if(pos_g>1)framebuffer[pos_g-2] 	= 0x00001000;
+		delay_ms(10);
+		framebuffer[pos_g] = 0;
+		if(pos_g>0) framebuffer[pos_g-1] = 0;
+		if(pos_g>1) framebuffer[pos_g-2] = 0;
+		pos_g++;
+		framebuffer[pos_b] 		= 0x000000FF;
+		if(pos_b>0) framebuffer[pos_b-1] 	= 0x00000040;
+		if(pos_b>1)framebuffer[pos_b-2] 	= 0x00000010;
+		delay_ms(10);
+		framebuffer[pos_b] = 0;
+		if(pos_b>0) framebuffer[pos_b-1] = 0;
+		if(pos_b>1) framebuffer[pos_b-2] = 0;
+		pos_b++;
 	};
 	
 }
