@@ -14,8 +14,8 @@ int main(void)
 	init_systick();
 	ws2812_init();
 
-	uint32_t pos_r = 20;
-	uint32_t pos_g = 10;
+	uint32_t pos_r = 40;
+	uint32_t pos_g = 20;
 	uint32_t pos_b = 0;
 	delay_ms(20);
 	while (1) {
@@ -25,23 +25,27 @@ int main(void)
 		ws2812_framebuffer[pos_r] 		= 0x00FF0000;
 		if(pos_r>0) ws2812_framebuffer[pos_r-1] 	= 0x00400000;
 		if(pos_r>1)ws2812_framebuffer[pos_r-2] 	= 0x00100000;
-		delay_ms(10);
+		
+		ws2812_framebuffer[pos_g] 		= 0x0000FF00;
+		if(pos_g>0) ws2812_framebuffer[pos_g-1] 	= 0x00004000;
+		if(pos_g>1) ws2812_framebuffer[pos_g-2] 	= 0x00001000;
+		
+		ws2812_framebuffer[pos_b] 		= 0x000000FF;
+		if(pos_b>0) ws2812_framebuffer[pos_b-1] 	= 0x00000040;
+		if(pos_b>1) ws2812_framebuffer[pos_b-2] 	= 0x00000010;
+
+		delay_ms(20);
+
 		ws2812_framebuffer[pos_r] = 0;
 		if(pos_r>0) ws2812_framebuffer[pos_r-1] = 0;
 		if(pos_r>1) ws2812_framebuffer[pos_r-2] = 0;
 		pos_r++;
-		ws2812_framebuffer[pos_g] 		= 0x0000FF00;
-		if(pos_g>0) ws2812_framebuffer[pos_g-1] 	= 0x00004000;
-		if(pos_g>1) ws2812_framebuffer[pos_g-2] 	= 0x00001000;
-		delay_ms(10);
+
 		ws2812_framebuffer[pos_g] = 0;
 		if(pos_g>0) ws2812_framebuffer[pos_g-1] = 0;
 		if(pos_g>1) ws2812_framebuffer[pos_g-2] = 0;
 		pos_g++;
-		ws2812_framebuffer[pos_b] 		= 0x000000FF;
-		if(pos_b>0) ws2812_framebuffer[pos_b-1] 	= 0x00000040;
-		if(pos_b>1) ws2812_framebuffer[pos_b-2] 	= 0x00000010;
-		delay_ms(10);
+
 		ws2812_framebuffer[pos_b] = 0;
 		if(pos_b>0) ws2812_framebuffer[pos_b-1] = 0;
 		if(pos_b>1) ws2812_framebuffer[pos_b-2] = 0;
