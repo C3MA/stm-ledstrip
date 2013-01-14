@@ -37,6 +37,7 @@ ASRC=startup_stm32f4xx.s
 
 # Project Source Files
 SRC=main.c
+SRC+=ws2812.c
 SRC+=delay.c
 SRC+=system_stm32f4xx.c
 
@@ -58,8 +59,7 @@ CDEFS+=-DUSE_STDPERIPH_DRIVER
 MCUFLAGS=-mcpu=cortex-m4 -mthumb -std=c99
 #MCUFLAGS=-mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpa -mfloat-abi=hard -mthumb-interwork
 #MCUFLAGS=-mcpu=cortex-m4 -mfpu=vfpv4-sp-d16 -mfloat-abi=hard
-#COMMONFLAGS=-O$(OPTLVL) -g -Wall -Werror
-COMMONFLAGS=-ggdb -Wall -Werror 
+COMMONFLAGS=-O$(OPTLVL) -g -Wall -Werror
 CFLAGS=$(COMMONFLAGS) $(MCUFLAGS) $(INCLUDE) $(CDEFS)
 
 LDLIBS=
