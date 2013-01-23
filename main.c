@@ -18,7 +18,61 @@ int main(void)
 	uint32_t pos_g = 20;
 	uint32_t pos_b = 0;
 	delay_ms(20);
+	//simple code to have 10 led in red, then green, then blue and change....
+	for (int i=0;i<FRAMEBUFFER_SIZE;i+=30) {
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].red=255;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].blue=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].green=0;
+	}
+	for (int i=10;i<FRAMEBUFFER_SIZE;i+=30) {
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].green=255;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].red=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].blue=0;
+	}
+	for (int i=20;i<FRAMEBUFFER_SIZE;i+=30) {
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].blue=255;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].red=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].green=0;
+	}
+	delay_ms(5000);
+	for (int i=0;i<FRAMEBUFFER_SIZE;i+=30) {
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].red=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].blue=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].green=255;
+	}
+	for (int i=10;i<FRAMEBUFFER_SIZE;i+=30) {
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].green=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].red=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].blue=255;
+	}
+	for (int i=20;i<FRAMEBUFFER_SIZE;i+=30) {
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].blue=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].red=255;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].green=0;
+	}
+	delay_ms(5000);
+	for (int i=0;i<FRAMEBUFFER_SIZE;i+=30) {
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].red=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].blue=255;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].green=0;
+	}
+	for (int i=10;i<FRAMEBUFFER_SIZE;i+=30) {
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].green=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].red=255;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].blue=0;
+	}
+	for (int i=20;i<FRAMEBUFFER_SIZE;i+=30) {
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].blue=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].red=0;
+		for (int j=0;j<10;j++) ws2812_framebuffer[i+j].green=255;
+	}
+	delay_ms(5000);
+	for (int i=0;i<FRAMEBUFFER_SIZE;i++) {
+		ws2812_framebuffer[i].red=ws2812_framebuffer[i].green=ws2812_framebuffer[i].blue=0;
+	}
 	while (1) {
+	
+		//code for running light
 		pos_r %= FRAMEBUFFER_SIZE;
 		pos_g %= FRAMEBUFFER_SIZE;
 		pos_b %= FRAMEBUFFER_SIZE;
