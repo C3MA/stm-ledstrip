@@ -5,14 +5,14 @@
 ##########################################################################
 
 TARGET:=main
-TOOLCHAIN_PATH:=~/sat/bin
+TOOLCHAIN_PATH:=~/Development/sat/bin
 TOOLCHAIN_PREFIX:=arm-none-eabi
 OPTLVL:=3 # Optimization level, can be [0, 1, 2, 3, s].
 
 PROJECT_NAME:=$(notdir $(lastword $(CURDIR)))
 
 #TOP is Path to firmware-folder from STM
-TOP:=/home/tobi/dev/STM32F4-Discovery_FW_V1.1.0
+TOP:=/Users/florianzahn/Development/stm32f4xx-fw
 
 
 DISCOVERY:=$(TOP)/Utilities/STM32F4-Discovery
@@ -59,7 +59,7 @@ CDEFS+=-DUSE_STDPERIPH_DRIVER
 MCUFLAGS=-mcpu=cortex-m4 -mthumb -std=c99
 #MCUFLAGS=-mcpu=cortex-m4 -mthumb -mlittle-endian -mfpu=fpa -mfloat-abi=hard -mthumb-interwork
 #MCUFLAGS=-mcpu=cortex-m4 -mfpu=vfpv4-sp-d16 -mfloat-abi=hard
-COMMONFLAGS=-O$(OPTLVL) -g -Wall -Werror
+COMMONFLAGS=-O$(OPTLVL) -g -Wall
 CFLAGS=$(COMMONFLAGS) $(MCUFLAGS) $(INCLUDE) $(CDEFS)
 
 LDLIBS=

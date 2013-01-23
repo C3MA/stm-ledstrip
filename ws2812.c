@@ -5,6 +5,7 @@
 #include <stm32f4xx_tim.h>
 #include <stm32f4xx_dma.h>
 
+
 static uint16_t PWM_Buffer[PWM_BUFFER_SIZE];
 uint32_t frame_pos = 0;
 int incomplete_return = 0; 
@@ -45,7 +46,9 @@ static void init_buffers(void)
 	}
 	for(int i = 0; i < FRAMEBUFFER_SIZE; i++)
 	{
-		ws2812_framebuffer[i] = 0;
+		ws2812_framebuffer[i].red = 0;
+		ws2812_framebuffer[i].green = 0;
+		ws2812_framebuffer[i].blue = 0;
 	}
 }
 
@@ -133,7 +136,8 @@ static inline void color2pwm(uint16_t ** const dest, const uint8_t color) {
 
 void Update_Buffer(uint16_t* buffer)
 {
-	uint32_t i, j, tmp;
+	struct led *framebufferp;
+	uint32_t i, j;
 	uint16_t * bufp;
 
 	for (i = 0; i < (PWM_BUFFER_SIZE/2) / 24; i++) {
@@ -160,14 +164,14 @@ void Update_Buffer(uint16_t* buffer)
 			}
 			else
 			{
-				tmp = ws2812_framebuffer[frame_pos++];
+				framebufferp = &ws2812_framebuffer[frame_pos++];
 				bufp =  buffer + (i * 24);
 
 				// edit here to change order of colors in "ws2812_framebuffer" (0x00RRGGBB, 0x00GGBBRR, etc)
 				// the chip needs G R B
-				color2pwm( &bufp, (tmp & 0x0000ff00) >> 8); // green
-				color2pwm( &bufp, (tmp & 0x00ff0000) >> 16); // red
-				color2pwm( &bufp, (tmp & 0x000000ff) >> 0); // blue
+				color2pwm( &bufp, framebufferp->green); // green
+				color2pwm( &bufp, framebufferp->red); // red
+				color2pwm( &bufp, framebufferp->blue); // blue
 			}
 		}
 	}
