@@ -8,9 +8,9 @@ void init_systick(void)
 {
 	RCC_ClocksTypeDef RCC_Clocks;
 
-	// 10µs
+	// 1ms
 	RCC_GetClocksFreq(&RCC_Clocks);
-	if(0 != SysTick_Config(RCC_Clocks.SYSCLK_Frequency / 100000)) {
+	if(0 != SysTick_Config(RCC_Clocks.SYSCLK_Frequency / 1000)) {
 		while(1);
 	}
 }
@@ -18,7 +18,7 @@ void init_systick(void)
 
 void delay_ms(uint32_t ms)
 {
-	volatile uint32_t te = system_time + ms * 100;
+	volatile uint32_t te = system_time + ms;
 	while(system_time < te);
 }
 
