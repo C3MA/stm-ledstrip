@@ -1,6 +1,7 @@
 ####################################################################
-#        Project Template for STM32F4 Discovery                    #
-#                    Florian Zahn                                  #
+#        Driver and test routine for WS2811 RGB-LED                #
+#              Tobias Mache    Florian Zahn                        #
+#                      CCC Mannheim e.V.                           #
 ####################################################################
 
 
@@ -9,3 +10,7 @@ needs summon-arm-toolchain
 PATHs in Makefile needs to be adjusted
 st-link needs to be installed to flash controller
 
+Work still in progress. 
+Basic thing is done: WS2811-LED strip can be controlled
+color of each LED-channelcan be set via simple array of led-struct (check code...)
+still missing: interaction and networking....
