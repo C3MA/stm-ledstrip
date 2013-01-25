@@ -1,7 +1,5 @@
 ##########################################################################
 #                    STM32F4 Project Template Makefile                   #
-#   based on work of Jonathon Thomson http://jethomson.wordpress.com     #
-#                      modified by mail@florianzahn.de                   #
 ##########################################################################
 
 TARGET:=main
@@ -11,46 +9,32 @@ OPTLVL:=3 # Optimization level, can be [0, 1, 2, 3, s].
 
 PROJECT_NAME:=$(notdir $(lastword $(CURDIR)))
 
-#TOP is Path to firmware-folder from STM
-TOP:=/Users/florianzahn/Development/stm32f4xx-fw
 
 
-DISCOVERY:=$(TOP)/Utilities/STM32F4-Discovery
-STMLIB:=$(TOP)/Libraries
-STD_PERIPH:=$(STMLIB)/STM32F4xx_StdPeriph_Driver
-STARTUP:=$(STMLIB)/CMSIS/ST/STM32F4xx/Source/Templates/gcc_ride7
 LINKER_SCRIPT=stm32_flash.ld
 
 
 INCLUDE=-I$(CURDIR)/inc
-INCLUDE+=-I$(STMLIB)/CMSIS/Include
-INCLUDE+=-I$(STMLIB)/CMSIS/ST/STM32F4xx/Include
-INCLUDE+=-I$(STD_PERIPH)/inc
-INCLUDE+=-I$(DISCOVERY)
+INCLUDE+=-I$(CURDIR)/lib/inc
+INCLUDE+=-I$(CURDIR)/lib/cmsis
+
+
 
 # vpath is used so object files are written to the current directory instead
 # of the same directory as their source files
-vpath %.c $(DISCOVERY) $(STD_PERIPH)/src
+vpath %.c $(CURDIR)/lib/src
 vpath %.s $(STARTUP)
 
 ASRC=startup_stm32f4xx.s
 
 # Project Source Files
-SRC=main.c
-SRC+=ws2812.c
-SRC+=delay.c
-SRC+=system_stm32f4xx.c
 
 
-# Discovery Source Files
-SRC+=stm32f4_discovery.c
+
 
 # Standard Peripheral Source Files
-SRC+=misc.c
-SRC+=stm32f4xx_gpio.c
-SRC+=stm32f4xx_rcc.c
-SRC+=stm32f4xx_tim.c
-SRC+=stm32f4xx_dma.c
+SRC+=$(wildcard $(CURDIR)/*.c)
+SRC+=$(wildcard $(CURDIR)/lib/src/*.c)
 
 
 CDEFS=-DSTM32F4XX
