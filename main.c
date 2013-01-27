@@ -20,6 +20,7 @@ int main(void)
 	delay_ms(20);
 
 	while (1) {
+
         uint8_t decision = 0;
         if (system_time%19000 <3000) {
             decision = 1;

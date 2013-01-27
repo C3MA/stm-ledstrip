@@ -3,3 +3,5 @@
 *.bin
 *.elf
 .DS_Store
+*.cpgz
+
